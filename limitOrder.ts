@@ -51,7 +51,29 @@ const accountTRG = async () => {
         await trader.connect(NaN, streamAccount);
     };
     
-    await account()
+    // await account()
+
+    let perpIndex: any;
+    for (const [name, {index, product}] of trader.getProducts()) {
+      console.log('saw', name, ' ', index);
+      if (name !== PRODUCT_NAME) {
+        continue;
+      }
+      perpIndex = index;
+      break;
+    }
+
+    		// 1.0000 contracts
+            const QUOTE_SIZE = dexterity.Fractional.New(1, 0);
+
+            const price = 29_000
+
+            const dollars = dexterity.Fractional.New(price, 0);
+
+            trader.newOrder(perpIndex, true, dollars, QUOTE_SIZE).then(async () => {
+                console.log(`Placed Buy Limit Order at $${dollars}`);
+                await account();
+          })
 }
 
 accountTRG()
